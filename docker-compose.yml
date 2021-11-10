@@ -23,7 +23,7 @@ services:
     environment:
       - PMA_ARBITRARY=1
       - PMA_HOST=db
-      - PMA_USER=phper
+      - PMA_USER=admin
       - PMA_PASSWORD=secret
     links:
       - db
