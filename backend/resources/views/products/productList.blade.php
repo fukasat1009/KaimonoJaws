@@ -5,6 +5,6 @@
 @section('content')
     <p>商品一覧ページです。</p>
     @foreach($products as $product)
-    <p>{{ $product->product_name }}</p>
+    <a href="{{ route('productShow', $product->product_name) }}">{{ $product->product_name }}</a>
     @endforeach
 @endsection

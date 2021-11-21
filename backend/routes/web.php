@@ -21,4 +21,8 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('/productList', [App\Http\Controllers\ProductListController::class, 'index'])->name('productList');
+//商品一覧画面
+Route::get('/productList', [App\Http\Controllers\ProductController::class, 'index'])->name('productList');
+
+//商品詳細画面
+Route::get('/products/{product_name}', [App\Http\Controllers\ProductController::class, 'show'])->name('productShow');
