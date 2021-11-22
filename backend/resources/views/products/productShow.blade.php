@@ -9,6 +9,6 @@
     <form>
 		<span>購入数</span>
 		<input>
-		<button type="submit">購入</button>
+		<button type="submit">カートに入れる</button>
     </form>
 @endsection
