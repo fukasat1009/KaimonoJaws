@@ -26,3 +26,9 @@ Route::get('/productList', [App\Http\Controllers\ProductController::class, 'inde
 
 //商品詳細画面
 Route::get('/products/{product_name}', [App\Http\Controllers\ProductController::class, 'show'])->name('productShow');
+
+//カート画面
+Route::get('/cart', [App\Http\Controllers\CartController::class, 'cartList'])->name('cartList');
+
+//商品をカートに追加する
+Route::post('/cart',[App\Http\Controllers\CartController::class, 'addToCart'])->name('addToCart');
