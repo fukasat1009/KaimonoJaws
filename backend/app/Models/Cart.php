@@ -18,4 +18,21 @@ class Cart extends Model
     {
         return $this->belongsTo('App\User');
     }
+
+    public function products()
+    {
+        return $this->belongsToMany('App\Models\Product')->withPivot('quantity')->withTimestamps();
+    }
+
+    /** カートの存在チェック */
+    public function cart_exist($user_id)
+    {
+        $exist = \App\Models\Cart::All()->where('user_id', $user_id)->first();
+
+        if(!$exist == null){
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
