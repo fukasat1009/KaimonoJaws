@@ -4,4 +4,5 @@
 
 @section('content')
     <p>Topページです。</p>
+    <a href="{{ route('productList') }}">商品一覧</a>
 @endsection

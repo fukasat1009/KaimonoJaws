@@ -19,7 +19,6 @@ class ProductController extends Controller
     public function show($product_name)
     {
         $product = \App\Models\Product::all()->where('product_name', $product_name)->first();;
-        // dd($product);
         $data = [
             'product'  => $product,
             'product_name' =>$product_name,
