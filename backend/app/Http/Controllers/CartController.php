@@ -13,9 +13,16 @@ class CartController extends Controller
     private $product;       //showページ用の変数
     private $products;      //indexページ用の変数
 
-    public function cartList()
+    public function cartList(Request $request)
     {
-        return view('products/cartList');
+        $session_data = $request->session()->get('session_data');
+        $session_product_id = array_column($session_data, 'session_product_id');
+        $products_in_cart = \App\Models\Product::All()->find($session_product_id);
+
+        $data = [
+            'products_in_cart'  => $products_in_cart,
+        ];
+        return view('products/cartList',$data);
     }
 
     public function addToCart(Request $request)
@@ -36,20 +43,26 @@ class CartController extends Controller
                 $cart->products()->sync([$ordered_product->id => [ 'quantity' => $ordered_quantity]], false);
             } else {
                 $cart = Cart::create([
-                'user_id' => Auth::id(),
+                    'user_id' => Auth::id(),
                 ]);
                 $cart->products()->sync([$ordered_product->id => [ 'quantity' => $ordered_quantity]], false);
             }
 
         } else{
-            //ここはセッションでcartに商品を登録予定
+            //未ログイン時のカート追加処理
+            $session_product_id = $request->product_id;
+            $session_product_quantity = $ordered_quantity;
+
+            $session_data = array();
+            $session_data = compact("session_product_id","session_product_quantity");
+            $request->session()->push('session_data', $session_data);
         }
         $products = \App\Models\Product::All();
 
         $data = [
-            'products' => $products,
+            'products'  => $products,
         ];
-        return view('products/productList', $data);
+        return view('products/cartList', $data);
 
     }
 }
