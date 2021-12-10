@@ -10,21 +10,26 @@ use Illuminate\Support\Facades\Auth;
 class CartController extends Controller
 {
 
-    private $product;       //showページ用の変数
-    private $products;      //indexページ用の変数
+    private $products_in_cart;              //カートに追加したすべての商品
+    private $session_products_quantity;     //カート内商品の注文数
 
+    //カート内商品一覧を出す処理
+    //未ログインはセッションから取得し、ログイン状態の場合はテーブルから取得
     public function cartList(Request $request)
     {
+        $this->getTheProductsInTheCart($request);
+
         $session_data = $request->session()->get('session_data');
-        $session_product_id = array_column($session_data, 'session_product_id');
-        $products_in_cart = \App\Models\Product::All()->find($session_product_id);
 
         $data = [
-            'products_in_cart'  => $products_in_cart,
+            'products_in_cart'              => $this->products_in_cart,
+            'session_products_quantity'     => $this->session_products_quantity,
+            'session_data'                  => $session_data,
         ];
         return view('products/cartList',$data);
     }
 
+    //カートに商品を追加する処理
     public function addToCart(Request $request)
     {
         $ordered_product = \App\Models\Product::All()->find($request->product_id);
@@ -57,12 +62,21 @@ class CartController extends Controller
             $session_data = compact("session_product_id","session_product_quantity");
             $request->session()->push('session_data', $session_data);
         }
-        $products = \App\Models\Product::All();
+        $this->getTheProductsInTheCart($request);
 
         $data = [
-            'products'  => $products,
+            'products_in_cart'  => $this->products_in_cart,
         ];
         return view('products/cartList', $data);
 
+    }
+
+    //カート内商品参照用処理
+    public function getTheProductsInTheCart($request)
+    {
+        $session_data = $request->session()->get('session_data');
+        $session_product_id = array_column($session_data, 'session_product_id');
+        $this->session_products_quantity = array_column($session_data, 'session_product_quantity');
+        $this->products_in_cart = \App\Models\Product::All()->find($session_product_id);
     }
 }
