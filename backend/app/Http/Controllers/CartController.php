@@ -11,20 +11,16 @@ class CartController extends Controller
 {
 
     private $products_in_cart;              //カートに追加したすべての商品
-    private $session_products_quantity;     //カート内商品の注文数
 
     //カート内商品一覧を出す処理
     //未ログインはセッションから取得し、ログイン状態の場合はテーブルから取得
     public function cartList(Request $request)
     {
-        $this->getTheProductsInTheCart($request);
-
-        $session_data = $request->session()->get('session_data');
-
+        if(!Auth::check()){
+            $this->products_in_cart = $this->getSessionProductsInTheCart($request);
+        }
         $data = [
-            'products_in_cart'              => $this->products_in_cart,
-            'session_products_quantity'     => $this->session_products_quantity,
-            'session_data'                  => $session_data,
+            'products_in_cart' => $this->products_in_cart,
         ];
         return view('products/cartList',$data);
     }
@@ -61,22 +57,26 @@ class CartController extends Controller
             $session_data = array();
             $session_data = compact("session_product_id","session_product_quantity");
             $request->session()->push('session_data', $session_data);
+            $this->products_in_cart = $this->getSessionProductsInTheCart($request);
         }
-        $this->getTheProductsInTheCart($request);
 
         $data = [
-            'products_in_cart'  => $this->products_in_cart,
+            'products_in_cart' => $this->products_in_cart,
         ];
         return view('products/cartList', $data);
 
     }
 
-    //カート内商品参照用処理
-    public function getTheProductsInTheCart($request)
+    //セッション内のカート商品参照用処理
+    public function getSessionProductsInTheCart($request)
     {
         $session_data = $request->session()->get('session_data');
-        $session_product_id = array_column($session_data, 'session_product_id');
-        $this->session_products_quantity = array_column($session_data, 'session_product_quantity');
-        $this->products_in_cart = \App\Models\Product::All()->find($session_product_id);
+        $this->products_in_cart_id = array_column($session_data, 'session_product_id');
+        $ordered_product = [];
+        foreach($this->products_in_cart_id as $id){
+            array_push($ordered_product,\App\Models\Product::All()->find($id));
+        };
+        $this->products_in_cart = $ordered_product;
+        return $this->products_in_cart;
     }
 }
