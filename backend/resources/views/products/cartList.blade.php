@@ -31,16 +31,16 @@
                 <div class="cartItems">
                     <div class="cartItems__items">
                         <div class="cartItems__items--name">
-                            <p>商品名：{{ $product->product_name }}</p>
+                            <p>商品名：{{ $product['product_name'] }}</p>
                         </div>
                         <div class="cartItems__items--quantity">
-                            <p>注文数：</p>
+                            <p>注文数：{{$product['quantity']}}</p>
                         </div>
                         <div class="cartItems__items--price">
-                            <p>単価：¥{{ $product->price }}</p>
+                            <p>単価：¥{{ $product['price'] }}</p>
                         </div>
                         <div class="cartItems__items--total-price">
-                            <p>合計金額：¥</p>
+                            <p>合計金額：¥{{ $product['price'] * $product['quantity'] }}</p>
                         </div>
                     </div>
                 </div>

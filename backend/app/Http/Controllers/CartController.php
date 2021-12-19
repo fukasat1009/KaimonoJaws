@@ -16,10 +16,13 @@ class CartController extends Controller
     //未ログインはセッションから取得し、ログイン状態の場合はテーブルから取得
     public function cartList(Request $request)
     {
+        $cart = new Cart;
+
         if(!Auth::check()){
-            $this->products_in_cart = $this->getProductsInTheCart($request);
+            $this->products_in_cart = $cart->getProductsInTheCart($request);
         }
-        $this->products_in_cart = $this->getProductsInTheCart($request);
+        $this->products_in_cart = $cart->getProductsInTheCart($request);
+
         $data = [
             'products_in_cart' => $this->products_in_cart,
         ];
@@ -29,6 +32,7 @@ class CartController extends Controller
     //カートに商品を追加する処理
     public function addToCart(Request $request)
     {
+        $cart = new Cart;
         $ordered_product = \App\Models\Product::All()->find($request->product_id);
         $ordered_quantity = $request->order_quantity;
         $stock_quantity = $ordered_product->stock_quantity;
@@ -39,29 +43,17 @@ class CartController extends Controller
         $ordered_product->save();
 
         if(Auth::check()){
-            $cart = new Cart;
             //Cartの存在チェック(Cartモデルに記載)
             //カートがない場合はcreateする
-            if($cart->cart_exist(Auth::id())){
-                $cart = \App\Models\Cart::All()->where('user_id', Auth::id())->first();
-
-                //カート内商品の重複チェック
-                //注文した商品がカートに既にあった場合、そのカート内注文数に新たな注文数を加算する。
-                $already_ordered_product = $cart->products->where('id', $request->product_id)->first();
-                if($already_ordered_product != null){
-                    if($already_ordered_product->id == $request->product_id){
-                        $already_quantity = $already_ordered_product->pivot->quantity;
-                        $total_quantity = $already_quantity + $ordered_quantity;
-                        $cart->products()->sync([$ordered_product->id => [ 'quantity' => $total_quantity]], false);
-                    }
-                } else {
-                    $cart->products()->sync([$ordered_product->id => [ 'quantity' => $ordered_quantity]], false);
-                }
+            if($cart->exist_check_cart(Auth::id())){
+                // //カート内商品の重複チェック
+                // //注文した商品がカートに既にあった場合、そのカート内注文数に新たな注文数を加算する。
+                $cart->exsit_check_auth_cart_product($request, $ordered_product, $ordered_quantity);
             } else {
-                $cart = Cart::create([
+                $cart_list = Cart::create([
                     'user_id' => Auth::id(),
                 ]);
-                $cart->products()->sync([$ordered_product->id => [ 'quantity' => $ordered_quantity]], false);
+                $cart_list->products()->sync([$ordered_product->id => [ 'quantity' => $ordered_quantity]], false);
             }
 
         } else{
@@ -69,23 +61,17 @@ class CartController extends Controller
             $session_product_id = $request->product_id;
             $session_product_quantity = $ordered_quantity;
             $session_data = $request->session()->get('session_data');
-            if(in_array($session_product_id, array_column( $session_data, 'session_product_id'))){
-                // // $search = array_search($session_product_id, array_column($session_data, 'session_product_id'));
-                // $total_quantity = array_column($session_data, 'session_product_quantity');
-                // $session_id_array = array_column($session_data, 'session_product_id');
-                // $session_key_of_id = array_search($session_product_id, $session_id_array);
-                // //重複している商品IDを取得
-                // $repeat_product_id = $session_id_array[$session_key_of_id];
-                // $repeat_product_quantity = array_search('session_product_id', array_column($session_data, $repeat_product_id));
-                // dd($repeat_product_quantity);
+
+            if($session_data != null){
+                // カートのデータがすでに存在している場合
+                //最初にカートに入れた商品IDがカート内にすでに存在するかのチェック→あればその数をカート内の数に加算
+                $cart->exist_check_session_cart_product($request, $session_data, $session_product_id, $session_product_quantity, $ordered_quantity);
+            } else { //セッションがない場合の処理
+                $session_data = compact("session_product_id", "session_product_quantity");
+                $request->session()->push('session_data', $session_data);
             }
-
-            $session_data = array();
-            $session_data = compact("session_product_id", "session_product_quantity");
-            $request->session()->push('session_data', $session_data);
         }
-
-        $this->products_in_cart = $this->getProductsInTheCart($request);
+        $this->products_in_cart = $cart->getProductsInTheCart($request);
         $data = [
             'products_in_cart' => $this->products_in_cart,
         ];
@@ -93,30 +79,4 @@ class CartController extends Controller
 
     }
 
-    //セッション内のカート商品参照用処理
-    public function getProductsInTheCart($request)
-    {
-        if(Auth::check()){
-            $cart = \App\Models\Cart::All()->where('user_id', Auth::id())->first();
-            $this->products_in_cart = $cart->products;
-            return $this->products_in_cart;
-        } else {
-            $session_data = $request->session()->get('session_data');
-            if($session_data == null){
-                return null;
-            }
-            $this->products_in_cart_id = array_column($session_data, 'session_product_id');
-            $ordered_product = [];
-            foreach($this->products_in_cart_id as $id){
-                array_push($ordered_product,\App\Models\Product::All()->find($id));
-            };
-            $this->products_in_cart = $ordered_product;
-            return $this->products_in_cart;
-        }
-    }
-    //商品IDの重複チェック
-    public function ProductIdRepeatCheck()
-    {
-        
-    }
 }
