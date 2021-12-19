@@ -19,6 +19,8 @@ class CartController extends Controller
         if(!Auth::check()){
             $this->products_in_cart = $this->getProductsInTheCart($request);
         }
+        $session_data = $request->session()->get('session_data');
+        dd($session_data);
         $this->products_in_cart = $this->getProductsInTheCart($request);
         $data = [
             'products_in_cart' => $this->products_in_cart,
@@ -69,23 +71,37 @@ class CartController extends Controller
             $session_product_id = $request->product_id;
             $session_product_quantity = $ordered_quantity;
             $session_data = $request->session()->get('session_data');
-            if(in_array($session_product_id, array_column( $session_data, 'session_product_id'))){
-                // // $search = array_search($session_product_id, array_column($session_data, 'session_product_id'));
-                // $total_quantity = array_column($session_data, 'session_product_quantity');
-                // $session_id_array = array_column($session_data, 'session_product_id');
-                // $session_key_of_id = array_search($session_product_id, $session_id_array);
-                // //重複している商品IDを取得
-                // $repeat_product_id = $session_id_array[$session_key_of_id];
-                // $repeat_product_quantity = array_search('session_product_id', array_column($session_data, $repeat_product_id));
-                // dd($repeat_product_quantity);
+
+            // $request->session()->push('session_data', $session_data);
+            if($session_data != null){
+                //もしカートに追加した商品が既にカートにあった場合は、過去にカートに入れた数量にプラスする
+                if(in_array($session_product_id, array_column($session_data, 'session_product_id'))){
+                    $key = array_search($session_product_id, array_column($session_data, 'session_product_id'));
+                    foreach ( $session_data[$key] as $session_product_quantity => $already_quantity ){
+                        $total_quantity = $already_quantity + $ordered_quantity;
+                        // $session_product_quantity = $total_quantity;
+                    }
+                    $request->session()->put('session_data.'.$key.'.session_product_quantity',$total_quantity);
+                    // dd($session_data);
+                    // $session_data = compact("session_product_id", "session_product_quantity");
+                    // $request->session()->flush();
+                    // $session_data = compact("session_product_id", "session_product_quantity");
+                    // $request->session()->push('session_data', $session_data);
+                } else{
+                    $session_data = compact("session_product_id", "session_product_quantity");
+                    $request->session()->push('session_data', $session_data);
+                }
+            } else {
+                // $session_data = array();
+                $session_data = compact("session_product_id", "session_product_quantity");
+                $request->session()->push('session_data', $session_data);
             }
-
-            $session_data = array();
-            $session_data = compact("session_product_id", "session_product_quantity");
-            $request->session()->push('session_data', $session_data);
+            // $session_data = compact("session_product_id", "session_product_quantity");
+            // $request->session()->push('session_data', $session_data);
+            // $request->session()->flush();
         }
-
         $this->products_in_cart = $this->getProductsInTheCart($request);
+        // $request->session()->flush();
         $data = [
             'products_in_cart' => $this->products_in_cart,
         ];
@@ -117,6 +133,6 @@ class CartController extends Controller
     //商品IDの重複チェック
     public function ProductIdRepeatCheck()
     {
-        
+        //
     }
 }
