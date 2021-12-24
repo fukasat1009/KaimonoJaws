@@ -1,0 +1,15 @@
+.cartItems__items {
+  display: flex;
+}
+.cartItems__items--name {
+  margin: 10px;
+}
+.cartItems__items--quantity {
+  margin: 10px;
+}
+.cartItems__items--price {
+  margin: 10px;
+}
+.cartItems__items--total-price {
+  margin: 10px;
+}

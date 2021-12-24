@@ -95,6 +95,7 @@ class Cart extends Model
             foreach($products_in_cart_id as $id){
                 $key = array_search($id, array_column($session_data, 'session_product_id'));
                 $product = \App\Models\Product::All()->find($id);
+                $ordered_product[$id]['product_id'] = $product->id;
                 $ordered_product[$id]['product_name'] = $product->product_name;
                 $ordered_product[$id]['price'] = $product->price;
                 $ordered_product[$id]['quantity'] = $session_data[$key]['session_product_quantity'];
