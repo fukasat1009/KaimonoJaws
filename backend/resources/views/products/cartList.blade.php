@@ -2,6 +2,10 @@
 
 @section('title', 'Cart')
 
+<!-- css style-->
+<link rel="stylesheet" href="{{ asset('css/cart/cart.css') }}">
+<!-------------->
+
 @section('content')
     <p>カートページです。</p>
     @if($products_in_cart == null)
@@ -23,6 +27,13 @@
                         <div class="cartItems__items--total-price">
                             <p>合計金額：¥{{ $product->price * $product->pivot->quantity }}</p>
                         </div>
+                        <div class="cartItems__items__delete">
+                            <form action="{{ route('removeProduct') }}" method="post">
+                                {{ csrf_field() }}
+                                <input name="remove_id" value="{{ $product->id }}" type="hidden">
+                                <button id="">削除</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             @endforeach
@@ -41,6 +52,13 @@
                         </div>
                         <div class="cartItems__items--total-price">
                             <p>合計金額：¥{{ $product['price'] * $product['quantity'] }}</p>
+                        </div>
+                        <div class="cartItems__items__delete">
+                            <form action="{{ route('removeProduct') }}" method="post">
+                                {{ csrf_field() }}
+                                <input name="remove_id" value="{{ $product['product_id'] }}" type="hidden">
+                                <button id="">削除</button>
+                            </form>
                         </div>
                     </div>
                 </div>

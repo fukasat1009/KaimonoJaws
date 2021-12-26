@@ -56,7 +56,7 @@ class CartController extends Controller
                 $cart_list->products()->sync([$ordered_product->id => [ 'quantity' => $ordered_quantity]], false);
             }
 
-        } else{
+        } else {
             //未ログイン時のカート追加処理
             $session_product_id = $request->product_id;
             $session_product_quantity = $ordered_quantity;
@@ -77,6 +77,24 @@ class CartController extends Controller
         ];
         return view('products/cartList', $data);
 
+    }
+    //カート内商品削除機能
+    public function removeProduct(Request $request)
+    {
+        if(Auth::check()){
+            $cart_list = \App\Models\Cart::All()->where('user_id', Auth::id())->first();
+            $cart_list->products->where('id', $request->remove_id)->first()->delete();
+        } else {
+            $session_data = $request->session()->get('session_data');
+            $key = array_search($request->remove_id, array_column($session_data, 'session_product_id'));
+            $request->session()->forget('session_data.'.$key);
+        }
+        $cart = new Cart;
+        $this->products_in_cart = $cart->getProductsInTheCart($request);
+        $data = [
+            'products_in_cart' => $this->products_in_cart,
+        ];
+        return view('products/cartList', $data);
     }
 
 }

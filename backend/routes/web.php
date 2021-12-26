@@ -32,3 +32,6 @@ Route::get('/cart', [App\Http\Controllers\CartController::class, 'cartList'])->n
 
 //商品をカートに追加する
 Route::post('/cart',[App\Http\Controllers\CartController::class, 'addToCart'])->name('addToCart');
+
+//商品をカートから除外する
+Route::post('/removeProduct',[App\Http\Controllers\CartController::class, 'removeProduct'])->name('removeProduct');

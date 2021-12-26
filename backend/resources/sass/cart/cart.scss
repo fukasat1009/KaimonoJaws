@@ -1,0 +1,17 @@
+.cartItems {
+  &__items {
+    display: flex;
+    &--name {
+      margin: 10px;
+    }
+    &--quantity {
+      margin: 10px;
+    }
+    &--price {
+      margin: 10px;
+    }
+    &--total-price {
+      margin: 10px;
+    }
+  }
+}
