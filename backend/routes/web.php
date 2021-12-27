@@ -35,3 +35,7 @@ Route::post('/cart',[App\Http\Controllers\CartController::class, 'addToCart'])->
 
 //商品をカートから除外する
 Route::post('/removeProduct',[App\Http\Controllers\CartController::class, 'removeProduct'])->name('removeProduct');
+
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('/myAddress', [App\Http\Controllers\DeliveryDestinationController::class, 'indexMyAddress'])->name('indexMyAddress');
+});
