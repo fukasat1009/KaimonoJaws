@@ -83,7 +83,7 @@ class CartController extends Controller
     {
         if(Auth::check()){
             $cart_list = \App\Models\Cart::All()->where('user_id', Auth::id())->first();
-            $cart_list->products->where('id', $request->remove_id)->first()->delete();
+            $cart_list->products()->detach($request->remove_id);
         } else {
             $session_data = $request->session()->get('session_data');
             $key = array_search($request->remove_id, array_column($session_data, 'session_product_id'));

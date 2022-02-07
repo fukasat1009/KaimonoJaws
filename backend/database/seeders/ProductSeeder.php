@@ -21,7 +21,7 @@ class ProductSeeder extends Seeder
                 [
                     'product_name'    => 'テスト商品' . $i,
                     'price'           => 10000,
-                    'stock_quantity'  => 5,
+                    'stock_quantity'  => 100,
                     'sale_status'     => 0,
                     'created_at'      => $today,
                     'updated_at'      => $today,

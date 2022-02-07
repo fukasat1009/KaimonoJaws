@@ -1,0 +1,8 @@
+.addressBox {
+  &__container {
+    margin: 20px;
+    .container__items {
+      margin: 5px;
+    }
+  }
+}
