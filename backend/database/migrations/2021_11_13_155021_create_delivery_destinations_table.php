@@ -22,7 +22,7 @@ class CreateDeliveryDestinationsTable extends Migration
             $table->integer('postal_code');
             $table->string('building')->nullable();
             $table->integer('room_number')->nullable();
-            $table->integer('phone_number');
+            $table->string('phone_number');
             $table->timestamps();
         });
     }
