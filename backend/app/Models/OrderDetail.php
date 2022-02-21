@@ -29,8 +29,4 @@ class OrderDetail extends Model
         return $this->hasMany('App\Product');
     }
 
-    public function carts()
-    {
-        return $this->hasMany('App\Cart');
-    }
 }
