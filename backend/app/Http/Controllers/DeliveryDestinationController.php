@@ -34,7 +34,11 @@ class DeliveryDestinationController extends Controller
         $new_address->phone_number = $request->phone_number;
         $new_address->save();
 
-        return view('mypage/indexMyAddress');
+        $my_addresses = \App\Models\DeliveryDestination::All()->where('user_id', Auth::id());
+        $data = [
+            'my_addresses' => $my_addresses,
+        ];
+        return view('mypage/indexMyAddress',$data);
 
     }
 }

@@ -38,11 +38,11 @@ class Cart extends Model
         }
     }
 
+    /** カート内商品の重複チェック */
     public function exsit_check_auth_cart_product($request, $ordered_product, $ordered_quantity)
     {
         $cart_list = \App\Models\Cart::All()->where('user_id', Auth::id())->first();
 
-        //カート内商品の重複チェック
         //注文した商品がカートに既にあった場合、そのカート内注文数に新たな注文数を加算する。
         $already_ordered_product = $cart_list->products->where('id', $request->product_id)->first();
         if($already_ordered_product != null){
