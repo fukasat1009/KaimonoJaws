@@ -64,5 +64,8 @@
                 </div>
             @endforeach
         @endif
+        <div class="order_link">
+            <a href="{{ route('orderDetail') }}">注文する</a>
+        </div>
     @endif
 @endsection

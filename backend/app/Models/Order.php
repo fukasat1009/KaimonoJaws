@@ -31,4 +31,9 @@ class Order extends Model
     {
         return $this->hasMany('App\Cart');
     }
+
+    public function products()
+    {
+        return $this->belongsToMany('App\Product')->withPivot('quantity','total_price','requested_delivery_date')->withTimestamps();
+    }
 }

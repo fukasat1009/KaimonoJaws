@@ -18,11 +18,6 @@ class Product extends Model
     ];
 
     /** リレーション(従属関係) */
-    public function order_detail()
-    {
-        return $this->belongsTo('App\OrderDetail');
-    }
-
     public function product_images()
     {
         return $this->hasMany('App\ProductImage');
@@ -36,5 +31,10 @@ class Product extends Model
     public function carts()
     {
         return $this->belongsToMany('App\Models\Cart')->withPivot('quantity')->withTimestamps();
+    }
+
+    public function orders()
+    {
+        return $this->belongsToMany('App\Models\Order')->withPivot('quantity','total_price','requested_delivery_date')->withTimestamps();
     }
 }

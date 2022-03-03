@@ -37,11 +37,12 @@ Route::post('/cart',[App\Http\Controllers\CartController::class, 'addToCart'])->
 Route::post('/removeProduct',[App\Http\Controllers\CartController::class, 'removeProduct'])->name('removeProduct');
 
 Route::group(['middleware' => 'auth'], function () {
-
     //マイアドレス一覧ページ
     Route::get('/myAddress', [App\Http\Controllers\DeliveryDestinationController::class, 'indexMyAddress'])->name('indexMyAddress');
     //配達先住所登録ページ
     Route::get('/newAddressForm', [App\Http\Controllers\DeliveryDestinationController::class, 'newAddressForm'])->name('newAddressForm');
     //配達先住所登録
     Route::post('/addNewAddress', [App\Http\Controllers\DeliveryDestinationController::class, 'addNewAddress'])->name('addNewAddress');
+    //注文商品確認ページ
+    Route::get('/orderDetail', [App\Http\Controllers\OrderController::class, 'orderDetail'])->name('orderDetail');
 });
