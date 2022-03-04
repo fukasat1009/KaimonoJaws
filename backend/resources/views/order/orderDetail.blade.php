@@ -23,7 +23,7 @@
             </div>
 
             <h3>お支払い方法</h3>
-            <payment-method></payment-method>
+            <payment-method v-bind:test='{{$test}}'></payment-method>
 
             <h3>商品</h3>
             <div class="order_items">
