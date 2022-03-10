@@ -7,23 +7,10 @@
         <h1>注文明細ページ</h1>
         <form>
             <h3>お届け先</h3>
-            <div class="delivery_destination">
-                <div class="delivery_destination__container">
-                    @foreach($delivery_destinations as $destination)
-                        <input type="radio" name="" value="">
-                        <div class="address__post_code">{{ $destination->post_code }}</div>
-                        <div class="address__prefecture">{{ $destination->prefecture }}</div>
-                        <div class="address__city">{{ $destination->city }}</div>
-                        <div class="address__block">{{ $destination->block }}</div>
-                        <div class="address__building">{{ $destination->building }}</div>
-                        <div class="address__room_number">{{ $destination->room_number }}</div>
-                        <div class="address__phone_number">{{ $destination->phone_number }}</div>
-                    @endforeach
-                </div>
-            </div>
+                <select-delivery-destination :delivery-destinations="{{ json_encode($delivery_destinations) }}"></select-delivery-destination>
 
             <h3>お支払い方法</h3>
-            <payment-method v-bind:test='{{$test}}'></payment-method>
+            <payment-method></payment-method>
 
             <h3>商品</h3>
             <div class="order_items">
