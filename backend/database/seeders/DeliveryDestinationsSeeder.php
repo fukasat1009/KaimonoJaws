@@ -29,6 +29,18 @@ class DeliveryDestinationsSeeder extends Seeder
                 'created_at'        => $today,
                 'updated_at'        => $today,
             ],
+            [
+                'user_id'           => 9,
+                'prefecture'        => '埼玉県',
+                'city'              => 'さいたま市',
+                'block'             => '8-8',
+                'postal_code'       => 0012334,
+                'building'          => 'ビルディング埼玉',
+                'room_number'       => 101,
+                'phone_number'      => 9011550000,
+                'created_at'        => $today,
+                'updated_at'        => $today,
+            ],
         ]);
     }
 }

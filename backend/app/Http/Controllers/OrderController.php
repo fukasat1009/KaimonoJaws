@@ -20,7 +20,6 @@ class OrderController extends Controller
         $this->products_in_cart = $cart->getProductsInTheCart($request);
         $this->delivery_destinations = \App\Models\DeliveryDestination::All()->where('user_id', Auth::id());
 
-
         $data = [
             'products_in_cart'          => $this->products_in_cart,
             'delivery_destinations'     => $this->delivery_destinations,

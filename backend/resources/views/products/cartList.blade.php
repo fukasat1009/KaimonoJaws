@@ -45,7 +45,7 @@
                             <p>商品名：{{ $product['product_name'] }}</p>
                         </div>
                         <div class="cartItems__items--quantity">
-                            <p>注文数：{{$product['quantity']}}</p>
+                            <p>注文数：{{ $product['quantity'] }}</p>
                         </div>
                         <div class="cartItems__items--price">
                             <p>単価：¥{{ $product['price'] }}</p>
