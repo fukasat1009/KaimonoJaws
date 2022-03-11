@@ -5,7 +5,8 @@
 @section('content')
     <div class="order_detail">
         <h1>注文明細ページ</h1>
-        <form>
+        <form action="{{ route('createOrderDetail') }}" method="post">
+            {{ csrf_field() }}
             <h3>お届け先</h3>
                 <select-delivery-destination :delivery-destinations="{{ json_encode($delivery_destinations) }}"></select-delivery-destination>
 
@@ -31,12 +32,12 @@
                                     <p>合計金額：¥{{ $product['price'] * $product->pivot['quantity'] }}</p>
                                 </div>
                                 <div class="cartItems__items__delete">
-                                    <form action="{{ route('removeProduct') }}" method="post">
-                                        {{ csrf_field() }}
-                                        <input name="remove_id" value="{{ $product['product_id'] }}" type="hidden">
+                                    <!-- <form action="{{ route('removeProduct') }}" method="post"> -->
+                                        <!-- {{ csrf_field() }}
+                                        <input name="remove_id" value="{{ $product['product_id'] }}" type="hidden"> -->
                                         <!-- 削除に関してはJavascriptで実装予定-->
-                                        <button id="">削除</button>
-                                    </form>
+                                        <!-- <button id="">削除</button> -->
+                                    <!-- </form> -->
                                 </div>
                             </div>
                         </div>
@@ -44,7 +45,7 @@
                 </div>
             </div>
             <div class="order_detail__submit">
-                <a href="#">注文確認画面へ進む</a>
+                <button type="submit">注文確認画面へ進む</button>
             </div>
         </form>
     </div>

@@ -17,7 +17,6 @@ class CartController extends Controller
     public function cartList(Request $request)
     {
         $cart = new Cart;
-
         if(!Auth::check()){
             $this->products_in_cart = $cart->getProductsInTheCart($request);
         }
