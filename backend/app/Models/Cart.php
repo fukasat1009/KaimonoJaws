@@ -74,7 +74,7 @@ class Cart extends Model
         }
     }
 
-    /** セッション内のカート商品参照用処理 */
+    /** カート商品参照用処理 */
     public function getProductsInTheCart($request)
     {
         if(Auth::check()){
@@ -103,5 +103,18 @@ class Cart extends Model
             $products_in_cart = $ordered_product;
             return $products_in_cart;
         }
+    }
+    
+    /** カート内の合計金額参照処理 */
+    public function getTotalPriceInTheCart($request)
+    {
+        $cart = new Cart();
+        $cart_products = $cart->getProductsInTheCart($request);
+        $price_array = [];
+        foreach($cart_products as $product){
+            $price_array[]['total_price'] = $product->price * $product->pivot->quantity;
+        }
+        $total_price = array_sum(array_column($price_array, 'total_price'));
+        return $total_price;
     }
 }

@@ -3,7 +3,7 @@
         <div class="delivery_destination__container">
             <ul>
                 <li v-for="address in deliveryDestinations" :key="address.id">
-                    <input type="radio" v-model="select" :id="address.id" :value="address.id" name="address">
+                    <input type="radio" v-model="select" :id="address.id" :value="address.id" name="address_id">
                     〒{{ address.postal_code }}
                     {{ address.prefecture }}
                     {{address.city}}

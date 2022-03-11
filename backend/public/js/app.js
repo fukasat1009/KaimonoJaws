@@ -37869,7 +37869,7 @@ var render = function () {
           expression: "payment",
         },
       ],
-      attrs: { type: "radio", id: "0", name: "", value: "credit" },
+      attrs: { type: "radio", id: "0", name: "payment", value: "credit" },
       domProps: { checked: _vm._q(_vm.payment, "credit") },
       on: {
         change: function ($event) {
@@ -37887,7 +37887,7 @@ var render = function () {
           expression: "payment",
         },
       ],
-      attrs: { type: "radio", id: "1", name: "", value: "cash" },
+      attrs: { type: "radio", id: "1", name: "payment", value: "cash" },
       domProps: { checked: _vm._q(_vm.payment, "cash") },
       on: {
         change: function ($event) {
@@ -37936,7 +37936,7 @@ var render = function () {
                   expression: "select",
                 },
               ],
-              attrs: { type: "radio", id: address.id, name: "address" },
+              attrs: { type: "radio", id: address.id, name: "address_id" },
               domProps: {
                 value: address.id,
                 checked: _vm._q(_vm.select, address.id),
