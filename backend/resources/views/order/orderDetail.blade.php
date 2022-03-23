@@ -43,6 +43,7 @@
                         </div>
                     @endforeach
                 </div>
+                <request-delivery-date></request-delivery-date>
             </div>
             <div class="order_detail__submit">
                 <button type="submit">注文確認画面へ進む</button>
