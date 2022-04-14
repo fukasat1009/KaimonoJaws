@@ -16,7 +16,7 @@
             {{ $req_delivery_destination->building }}
             {{ $req_delivery_destination->room_number }}
             TEL:{{ $req_delivery_destination->phone_number }}
-            
+
         <h3>お支払い方法</h3>
         <input name="payment" value="{{ $payment }}">{{ $payment }}</input>
         <h3>商品</h3>
@@ -40,6 +40,9 @@
                         </div>
                     </div>
                 @endforeach
+            </div>
+            <div class="order_items__req-delivery-date">
+                <input name="req_delivery_date" value="{{ $req_delivery_date }}">
             </div>
         </div>
         <div class="order_detail__submit">

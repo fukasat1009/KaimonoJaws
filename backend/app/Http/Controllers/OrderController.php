@@ -34,18 +34,20 @@ class OrderController extends Controller
 
         $payment = $request->payment;
         $address_id = $request->address_id;
+        $req_delivery_date = $request->req_delivery_date;
         $req_delivery_destination = \App\Models\DeliveryDestination::All()->find($address_id);
         $this->products_in_cart = $cart->getProductsInTheCart($request);
 
         $data = [
             'products_in_cart'          => $this->products_in_cart,
+            'req_delivery_date'         => $req_delivery_date,
             'req_delivery_destination'  => $req_delivery_destination,
             'payment'                   => $payment,
         ];
         return view('order/orderConfirm', $data);
     }
 
-    public function createOrder(Request $request) 
+    public function createOrder(Request $request)
     {
         $cart = new Cart;
 
@@ -64,15 +66,27 @@ class OrderController extends Controller
         $products_in_cart = $cart->getProductsInTheCart($request);
         foreach($products_in_cart as $product){
             $order->products()->sync([
-                $product->id => [ 
-                    'quantity' => $product->pivot->quantity, 
-                    'total_price' => $product->pivot->quantity * $product->price, 
-                    'requested_delivery_date' => date("Y-m-d H:i:s") 
+                $product->id => [
+                    'quantity' => $product->pivot->quantity,
+                    'total_price' => $product->pivot->quantity * $product->price,
+                    'requested_delivery_date' => $request->req_delivery_date
                 ]
             ], false);
+
+            $this->stockProductCalculation($product,$product->pivot->quantity);
         }
+
         Cart::where('user_id', Auth::id())->delete();
 
         return view('order/finishedOrder');
+    }
+
+    //注文後に在庫数から注文数を減らす
+    public function stockProductCalculation($ordered_product,$ordered_quantity)
+    {
+        $stock_quantity = $ordered_product->stock_quantity;
+        $current_stock_quantity = $stock_quantity - $ordered_quantity;
+        $ordered_product->stock_quantity = $current_stock_quantity;
+        $ordered_product->save();
     }
 }

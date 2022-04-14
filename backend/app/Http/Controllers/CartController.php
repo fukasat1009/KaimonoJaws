@@ -12,6 +12,7 @@ class CartController extends Controller
 
     private $products_in_cart; //カートに追加したすべての商品
 
+
     //カート内商品一覧を出す処理
     //未ログインはセッションから取得し、ログイン状態の場合はテーブルから取得
     public function cartList(Request $request)
@@ -34,12 +35,6 @@ class CartController extends Controller
         $cart = new Cart;
         $ordered_product = \App\Models\Product::All()->find($request->product_id);
         $ordered_quantity = $request->order_quantity;
-        $stock_quantity = $ordered_product->stock_quantity;
-
-        //カートに商品追加時の在庫数を調整する
-        $current_stock_quantity = $stock_quantity - $ordered_quantity;
-        $ordered_product->stock_quantity = $current_stock_quantity;
-        $ordered_product->save();
 
         if(Auth::check()){
             //Cartの存在チェック(Cartモデルに記載)
@@ -47,7 +42,7 @@ class CartController extends Controller
             if($cart->exist_check_cart(Auth::id())){
                 // //カート内商品の重複チェック
                 // //注文した商品がカートに既にあった場合、そのカート内注文数に新たな注文数を加算する。
-                $cart->exsit_check_auth_cart_product($request, $ordered_product, $ordered_quantity);
+                $cart->exist_check_auth_cart_product($ordered_product, $ordered_quantity);
             } else {
                 $cart_list = Cart::create([
                     'user_id' => Auth::id(),

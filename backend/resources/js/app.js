@@ -22,6 +22,7 @@ window.Vue = require('vue').default;
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('payment-method', require('./components/orderDetail/PaymentMethod.vue').default);
 Vue.component('select-delivery-destination', require('./components/orderDetail/SelectDeliveryDestination.vue').default);
+Vue.component('request-delivery-date',  require('./components/orderDetail/RequestDeliveryDateForm.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

@@ -39,14 +39,14 @@ class Cart extends Model
     }
 
     /** カート内商品の重複チェック */
-    public function exsit_check_auth_cart_product($request, $ordered_product, $ordered_quantity)
+    public function exist_check_auth_cart_product($ordered_product, $ordered_quantity)
     {
         $cart_list = \App\Models\Cart::All()->where('user_id', Auth::id())->first();
 
         //注文した商品がカートに既にあった場合、そのカート内注文数に新たな注文数を加算する。
-        $already_ordered_product = $cart_list->products->where('id', $request->product_id)->first();
+        $already_ordered_product = $cart_list->products->where('id', $ordered_product->id)->first();
         if($already_ordered_product != null){
-            if($already_ordered_product->id == $request->product_id){
+            if($already_ordered_product->id == $ordered_product->id){
                 $already_quantity = $already_ordered_product->pivot->quantity;
                 $total_quantity = $already_quantity + $ordered_quantity;
                 $cart_list->products()->sync([$ordered_product->id => [ 'quantity' => $total_quantity]], false);
@@ -93,7 +93,7 @@ class Cart extends Model
             $products_in_cart_id = array_column($session_data, 'session_product_id');
             $ordered_product = [];
             foreach($products_in_cart_id as $id){
-                $key = array_search($id, array_column($session_data, 'session_product_id'));
+                $key = array_search($id, $products_in_cart_id);
                 $product = \App\Models\Product::All()->find($id);
                 $ordered_product[$id]['product_id'] = $product->id;
                 $ordered_product[$id]['product_name'] = $product->product_name;
@@ -104,7 +104,7 @@ class Cart extends Model
             return $products_in_cart;
         }
     }
-    
+
     /** カート内の合計金額参照処理 */
     public function getTotalPriceInTheCart($request)
     {
@@ -117,4 +117,42 @@ class Cart extends Model
         $total_price = array_sum(array_column($price_array, 'total_price'));
         return $total_price;
     }
+
+    /** 非ログイン時にカート商品をログイン後に引き継がせる */
+    public function getProductsAfterLogin($request)
+    {
+        $cart = new Cart;
+        $session_data = $request->session()->get('session_data');
+
+        if($session_data != null){
+            $products_in_cart_id = array_column($session_data, 'session_product_id');
+            $ordered_product = [];
+            foreach($products_in_cart_id as $id){
+                $key = array_search($id, $products_in_cart_id);
+                $product = \App\Models\Product::All()->find($id);
+                $ordered_product[$id]['product_id'] = $product->id;
+                $ordered_product[$id]['product_name'] = $product->product_name;
+                $ordered_product[$id]['price'] = $product->price;
+                $ordered_product[$id]['quantity'] = $session_data[$key]['session_product_quantity'];
+            };
+            $products_in_cart = $ordered_product;
+
+            if($cart->exist_check_cart(Auth::id())){
+                // //カート内商品の重複チェック
+                // //注文した商品がカートに既にあった場合、そのカート内注文数に新たな注文数を加算する。
+                foreach($products_in_cart as $product){
+                    $ordered_product = \App\Models\Product::All()->find($product['product_id']);
+                    $cart->exist_check_auth_cart_product($ordered_product, $product['quantity']);
+                }
+            } else {
+                $cart_list = Cart::create([
+                    'user_id' => Auth::id(),
+                ]);
+                foreach($products_in_cart as $product){
+                    $cart_list->products()->sync([$product->product_id => [ 'quantity' => $product->quantity]], false);
+                }
+            }
+        }
+    }
+
 }
