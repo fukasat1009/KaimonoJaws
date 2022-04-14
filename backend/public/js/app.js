@@ -2161,11 +2161,16 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   data: function data() {
+    var date = new Date();
+    var newdate = date.setDate(date.getDate() + 1);
     return {
       DatePickerFormat: "yyyy/MM/dd",
       ja: vuejs_datepicker_dist_locale__WEBPACK_IMPORTED_MODULE_1__.ja,
       highlighted: {
         days: [6, 0]
+      },
+      disabledDates: {
+        to: new Date(newdate)
       }
     };
   }
@@ -38062,6 +38067,7 @@ var render = function () {
           language: _vm.ja,
           "input-class": "form-control bg-white",
           highlighted: _vm.highlighted,
+          "disabled-dates": _vm.disabledDates,
         },
       }),
     ],

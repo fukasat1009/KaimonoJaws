@@ -72,9 +72,21 @@ class OrderController extends Controller
                     'requested_delivery_date' => $request->req_delivery_date
                 ]
             ], false);
+
+            $this->stockProductCalculation($product,$product->pivot->quantity);
         }
+
         Cart::where('user_id', Auth::id())->delete();
 
         return view('order/finishedOrder');
+    }
+
+    //注文後に在庫数から注文数を減らす
+    public function stockProductCalculation($ordered_product,$ordered_quantity)
+    {
+        $stock_quantity = $ordered_product->stock_quantity;
+        $current_stock_quantity = $stock_quantity - $ordered_quantity;
+        $ordered_product->stock_quantity = $current_stock_quantity;
+        $ordered_product->save();
     }
 }

@@ -1,6 +1,5 @@
 <template>
     <div class="order-items__req-date">
-        <!-- 配送希望日：<input name="req_delivery_date" type="date" /> -->
         <datepicker
             :value="defaultdate"
             :format="this.DatePickerFormat"
@@ -8,6 +7,7 @@
             :language="ja"
             input-class="form-control bg-white"
             :highlighted="highlighted"
+            :disabled-dates="disabledDates"
         >
         </datepicker>
     </div>
@@ -32,11 +32,17 @@ export default {
         }
     },
     data() {
+        var date = new Date();
+        var newdate = date.setDate(date.getDate() + 1);
+
         return {
             DatePickerFormat: "yyyy/MM/dd",
             ja: ja,
             highlighted: {
                 days: [6, 0]
+            },
+            disabledDates: {
+                to: new Date(newdate),
             }
         };
     }
