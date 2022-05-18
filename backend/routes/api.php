@@ -2,6 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Api\AuthController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -16,4 +19,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+Route::post('/authenticate', [AuthController::class, 'authenticate']);
+Route::group(['middleware' => 'api'], function() {
+    //注文詳細画面で商品を削除する
+    Route::post('/orderDetail/remove', [App\Http\Controllers\OrderController::class, 'removeOrderItem'])->name('removeOrderItem');
 });
