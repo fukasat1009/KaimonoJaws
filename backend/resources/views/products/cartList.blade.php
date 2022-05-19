@@ -8,7 +8,7 @@
 
 @section('content')
     <p>カートページです。</p>
-    @if($products_in_cart == null)
+    @if($products_in_cart == null or $products_in_cart == "[]")
         <p>現在カート内に商品はありません</p>
     @elseif($products_in_cart != null)
         @if(Auth::check())

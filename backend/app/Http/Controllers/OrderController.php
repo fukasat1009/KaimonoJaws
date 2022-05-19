@@ -89,4 +89,13 @@ class OrderController extends Controller
         $ordered_product->stock_quantity = $current_stock_quantity;
         $ordered_product->save();
     }
+
+    //商品削除機能
+    public function removeOrderItem(Request $request)
+    {
+        $cart_list = \App\Models\Cart::All()->where('user_id', $request->auth_id)->first();
+        $cart_list->products()->detach($request->item);
+
+        return response()->json(['cart_list'=> $cart_list]);
+    }
 }

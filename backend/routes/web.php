@@ -57,4 +57,5 @@ Route::group(['middleware' => 'auth'], function () {
 
     //注文作成
     Route::post('/createOrder', [App\Http\Controllers\OrderController::class, 'createOrder'])->name('createOrder');
+
 });
