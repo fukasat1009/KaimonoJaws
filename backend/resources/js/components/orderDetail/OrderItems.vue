@@ -15,13 +15,7 @@
 					<p>合計金額：¥{{ item.price * item.pivot.quantity }}</p>
 				</div>
 				<div class="cartItems__items__delete">
-					<button type="button"  v-on:click="deleteItem(item.id)">削除</button>
-					<!-- <form action="{{ route('removeProduct') }}" method="post"> -->
-						<!-- {{ csrf_field() }}
-						<input name="remove_id" value="{{ $product['product_id'] }}" type="hidden"> -->
-						<!-- 削除に関してはJavascriptで実装予定-->
-						<!-- <button id="">削除</button> -->
-					<!-- </form> -->
+					<button type="button"  v-on:click="deleteItem(item.id,authId)">削除</button>
 				</div>
 			</div>
 		</div>
@@ -29,23 +23,17 @@
 </template>
 <script>
     export default {
-        // data: function() {
-        //     return {
-        //         //配列のidの最小値を初期値にセット
-        //         select: this.deliveryDestinations.reduce((a,b)=>a.id<b.id?a:b).id,
-        //     }
-        // },
         props: {
             orderItems: Array,
+			authId: Number,
         },
 		methods: {
-            deleteItem(item) {
-				console.log('-----------');
-				console.log(item);
+            deleteItem(item,auth) {
 				axios.post('/api/orderDetail/remove', {
-					item: item
+					item: item,
+					auth_id: auth
 					}).then((res)=>{
-					alert('削除成功');
+						this.orderItems = res.cartList
 				})
             }
         }

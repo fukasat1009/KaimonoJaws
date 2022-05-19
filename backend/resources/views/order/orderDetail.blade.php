@@ -15,7 +15,7 @@
 
             <h3>商品</h3>
             <div class="order_items">
-                <order-items :order-items="{{ json_encode($products_in_cart) }}"></order-items>
+                <order-items :order-items="{{ json_encode($products_in_cart) }}" :auth-id="{{ json_encode(Auth::id()) }}"></order-items>
                 <request-delivery-date name="req_delivery_date" defaultdate="{{ \Carbon\Carbon::now()->addWeekdays(2) }}"></request-delivery-date>
             </div>
             <div class="order_detail__submit">

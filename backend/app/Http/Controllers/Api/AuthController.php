@@ -15,9 +15,14 @@ class AuthController extends Controller
             'password'  => ['required'],
         ]);
 
+        // if(Auth::attempt($credentials)){
+        //     $token = $request->user()->createToken('token-name');
+        //     return response()->json(['api_token' => $token->plainTextToken], 200);
+        // }
+
         if(Auth::attempt($credentials)){
             $token = $request->user()->createToken('token-name');
-            return response()->json(['api_token' => $token->plainTextToken], 200);
+            return $token->plainTextToken;
         }
 
         return response()->json(['api_token' => null], 401);

@@ -2123,30 +2123,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  // data: function() {
-  //     return {
-  //         //配列のidの最小値を初期値にセット
-  //         select: this.deliveryDestinations.reduce((a,b)=>a.id<b.id?a:b).id,
-  //     }
-  // },
   props: {
-    orderItems: Array
+    orderItems: Array,
+    authId: Number
   },
   methods: {
-    deleteItem: function deleteItem(item) {
-      console.log('-----------');
-      console.log(item);
+    deleteItem: function deleteItem(item, auth) {
+      var _this = this;
+
       axios.post('/api/orderDetail/remove', {
-        item: item
+        item: item,
+        auth_id: auth
       }).then(function (res) {
-        alert('削除成功');
+        _this.orderItems = res.cartList;
       });
     }
   }
@@ -38162,7 +38152,7 @@ var render = function () {
                 attrs: { type: "button" },
                 on: {
                   click: function ($event) {
-                    return _vm.deleteItem(item.id)
+                    return _vm.deleteItem(item.id, _vm.authId)
                   },
                 },
               },
