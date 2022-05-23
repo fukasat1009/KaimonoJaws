@@ -16,10 +16,24 @@ use App\Http\Controllers\Api\AuthController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:sanctum')->post('/token', function (Request $request) {
+    $user = $request->user();
+    $auth_id = $request->auth_id;
+    if($auth_id === $user->id){
+        return true;
+    }
+    return false;
 });
+
+// Route::middleware('auth:sanctum')->post('/orderDetail/remove', function (Request $request) {
+//     Route::group(['middleware' => 'api'], function() {
+//         //注文詳細画面で商品を削除する
+//         Route::post('/orderDetail/remove', [App\Http\Controllers\OrderController::class, 'removeOrderItem'])->name('removeOrderItem');
+//     });
+// });
+
 Route::post('/authenticate', [AuthController::class, 'authenticate']);
+
 Route::group(['middleware' => 'api'], function() {
     //注文詳細画面で商品を削除する
     Route::post('/orderDetail/remove', [App\Http\Controllers\OrderController::class, 'removeOrderItem'])->name('removeOrderItem');

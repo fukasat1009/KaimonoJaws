@@ -7,6 +7,7 @@ use App\Providers\RouteServiceProvider;
 use App\Models\Cart;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use App\Http\Controllers\Api\AuthController;
 
 class LoginController extends Controller
 {
@@ -40,11 +41,15 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-    protected function authenticated(\Illuminate\Http\Request $request, $user)
+    protected function authenticated(\Illuminate\Http\Request $request)
     {
         $cart = new Cart;
         // 非ログイン時にカートに入れた商品をログイン後に引き継ぐ
         $cart->getProductsAfterLogin($request);
+
+        $api_auth = new AuthController;
+        $api_auth->authenticate($request);
+
 
         // ログイン後のリダイレクト
         return redirect()->intended($this->redirectPath());
