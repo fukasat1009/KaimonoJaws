@@ -98,4 +98,20 @@ class OrderController extends Controller
 
         return response()->json(['cart_list'=> $cart_list]);
     }
+
+    //注文履歴一覧
+    public function showOrderHistory()
+    {
+        $orders = \App\Models\Order::All()->where('user_id', Auth::id());
+        $ordered_products = [];
+        foreach($orders as $order ){
+            foreach($order->products as $order_product){
+                $order_product->product_name;
+            }
+        }
+        $data = [
+            'orders' => $orders
+        ];
+        return view('mypage/orderHistory', $data);
+    }
 }

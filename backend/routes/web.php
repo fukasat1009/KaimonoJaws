@@ -58,4 +58,7 @@ Route::group(['middleware' => 'auth'], function () {
     //注文作成
     Route::post('/createOrder', [App\Http\Controllers\OrderController::class, 'createOrder'])->name('createOrder');
 
+    //注文履歴一覧
+    Route::get('/orderHisotry', [App\Http\Controllers\OrderController::class, 'showOrderHistory'])->name('orderHisotry');
+
 });
