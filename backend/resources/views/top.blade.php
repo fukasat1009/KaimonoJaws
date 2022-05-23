@@ -7,4 +7,5 @@
     <a href="{{ route('productList') }}">商品一覧</a>
     <a href="{{ route('cartList') }}">カート</a>
     <a href="{{ route('indexMyAddress') }}">MyAddress</a>
+    <a href="{{ route('orderHisotry') }}">注文履歴</a>
 @endsection
