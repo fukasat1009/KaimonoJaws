@@ -2123,10 +2123,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: {
     orderItems: Array,
     authId: Number
+  },
+  data: function data() {
+    return {
+      dataItems: this.orderItems
+    };
   },
   methods: {
     deleteItem: function deleteItem(item, auth) {
@@ -2136,7 +2142,20 @@ __webpack_require__.r(__webpack_exports__);
         item: item,
         auth_id: auth
       }).then(function (res) {
-        _this.orderItems = res.cartList;
+        _this.dataItems = res.cartList;
+      });
+    },
+    getToken: function getToken(item, auth) {
+      var _this2 = this;
+
+      axios.post('/api/token', {
+        auth_id: auth
+      }).then(function (res) {
+        if (res.data == 1) {
+          _this2.deleteItem(item, auth);
+        } else {
+          alert("不正なアクセスです。");
+        }
       });
     }
   }
@@ -38125,7 +38144,7 @@ var render = function () {
     _c(
       "div",
       { staticClass: "cartItems" },
-      _vm._l(_vm.orderItems, function (item) {
+      _vm._l(_vm.dataItems, function (item) {
         return _c("div", { key: item.id, staticClass: "cartItems__items" }, [
           _c("div", { staticClass: "cartItems__items--name" }, [
             _c("p", [_vm._v("商品名：" + _vm._s(item.product_name))]),
@@ -38157,6 +38176,19 @@ var render = function () {
                 },
               },
               [_vm._v("削除")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                attrs: { type: "button" },
+                on: {
+                  click: function ($event) {
+                    return _vm.getToken(item.id, _vm.authId)
+                  },
+                },
+              },
+              [_vm._v("削除テスト")]
             ),
           ]),
         ])

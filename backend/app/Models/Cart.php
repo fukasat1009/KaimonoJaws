@@ -149,7 +149,7 @@ class Cart extends Model
                     'user_id' => Auth::id(),
                 ]);
                 foreach($products_in_cart as $product){
-                    $cart_list->products()->sync([$product->product_id => [ 'quantity' => $product->quantity]], false);
+                    $cart_list->products()->sync([$product['product_id'] => [ 'quantity' => $product['quantity']]], false);
                 }
             }
         }

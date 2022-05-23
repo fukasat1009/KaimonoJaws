@@ -1,7 +1,7 @@
 <template>
     <div class="order_items__container">
 		<div class="cartItems">
-			<div class="cartItems__items" v-for="item in orderItems" :key="item.id">
+			<div class="cartItems__items" v-for="item in dataItems" :key="item.id">
 				<div class="cartItems__items--name">
 					<p>商品名：{{ item.product_name }}</p>
 				</div>
@@ -16,6 +16,7 @@
 				</div>
 				<div class="cartItems__items__delete">
 					<button type="button"  v-on:click="deleteItem(item.id,authId)">削除</button>
+					<button type="button"  v-on:click="getToken(item.id,authId)">削除テスト</button>
 				</div>
 			</div>
 		</div>
@@ -27,15 +28,32 @@
             orderItems: Array,
 			authId: Number,
         },
+		data: function() {
+			return {
+				dataItems: this.orderItems
+			}
+		},
 		methods: {
             deleteItem(item,auth) {
 				axios.post('/api/orderDetail/remove', {
 					item: item,
 					auth_id: auth
 					}).then((res)=>{
-						this.orderItems = res.cartList
+						this.dataItems = res.cartList
 				})
-            }
+            },
+			getToken(item,auth) {
+				axios.post('/api/token', {
+					auth_id: auth
+				}).then((res)=>{
+					if(res.data == 1){
+						this.deleteItem(item,auth)
+					} else {
+						alert("不正なアクセスです。");
+					}
+				})
+			}
+
         }
     }
 </script>

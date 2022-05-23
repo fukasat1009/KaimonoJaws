@@ -8,6 +8,9 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Cart;
+use App\Http\Controllers\Api\AuthController;
+
 
 class RegisterController extends Controller
 {
@@ -69,5 +72,16 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+    }
+
+    protected function registered(\Illuminate\Http\Request $request)
+    {
+        $cart = new Cart;
+        // 非ログイン時にカートに入れた商品をログイン後に引き継ぐ
+        $cart->getProductsAfterLogin($request);
+
+        $api_auth = new AuthController;
+        $api_auth->authenticate($request);
+
     }
 }
