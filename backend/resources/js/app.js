@@ -24,7 +24,8 @@ Vue.component('payment-method', require('./components/orderDetail/PaymentMethod.
 Vue.component('select-delivery-destination', require('./components/orderDetail/SelectDeliveryDestination.vue').default);
 Vue.component('request-delivery-date',  require('./components/orderDetail/RequestDeliveryDateForm.vue').default);
 Vue.component('order-items',  require('./components/orderDetail/OrderItems.vue').default);
-
+Vue.component('price-average',  require('./components/products/priceAverage.vue').default);
+Vue.component('chart',  require('./components/products/chart.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
