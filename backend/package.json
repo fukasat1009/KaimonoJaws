@@ -25,6 +25,8 @@
         "vue-template-compiler": "^2.6.12"
     },
     "dependencies": {
+        "chart.js": "2.8",
+        "vue-chartjs": "^3.4.2",
         "vuejs-datepicker": "^1.6.2"
     }
 }
