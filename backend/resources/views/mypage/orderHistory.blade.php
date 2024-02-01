@@ -11,4 +11,5 @@
             <p>数量：{{ $item->pivot->quantity }}</p>
         @endforeach
     @endforeach
+    <price-average></price-average>
 @endsection
